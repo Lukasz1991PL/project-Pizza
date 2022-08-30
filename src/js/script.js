@@ -46,6 +46,11 @@
       defaultMin: 1,
       defaultMax: 9,
     },
+    db: {
+      url: '//localhost:3131',
+      products: 'products',
+      orders: 'orders',
+    },
   };
 
   const templates = {
@@ -147,12 +152,100 @@
         event.preventDefault();
         thisProduct.processOrder();
       });
-      console.log('initOrderform', initOrderForm);
     }
 
     processOrder() {
       const thisProduct = this;
-      console.log('prosessOrder', processOrder);
+      // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      console.log('formData', formData);
+      console.log('thisProduct.data.params', thisProduct.data.params);
+      // set price to default price
+      let price = thisProduct.data.price;
+
+      // for every category (param)...
+      for (let paramId in thisProduct.data.params) {
+        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
+        const param = thisProduct.data.params[paramId];
+        console.log('=>', param);
+
+        // for every option in this category
+        for (let optionId in param.options) {
+          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
+          const option = param.options[optionId];
+          console.log(optionId, option);
+          console.log('option', option);
+          // check if there is param with a name of paramId in formData and if it includes optionId
+          const optionSelected =
+            formData[paramId] && formData[paramId].includes(optionId);
+          const optionImage = thisProduct.imageWrapper.querySelector(
+            '.' + paramId + '-' + optionId
+          );
+          if (optionSelected) {
+            // check if the option is not default
+            if (!option.default === true) {
+              // add option price to price variable
+              price += option.price;
+            }
+          } else if (option.default === true) {
+            // reduce price variable
+            price -= option.price;
+          }
+        }
+
+        // update calculated price in the HTML
+        thisProduct.priceElem.innerHTML = price;
+      }
+    }
+  }
+
+  class AmuontWidget {
+    constructor(element) {
+      const thisWidget = this;
+      thisWidget.getElements(element);
+      console.log('AmountWidget', thisWidget);
+    }
+    getElements(element) {
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(
+        select.widgets.amount.input
+      );
+      thisWidget.linkDecrease = thisWidget.element.querySelector(
+        select.widgets.amount.linkDecrease
+      );
+      thisWidget.linkIncrease = thisWidget.element.querySelector(
+        select.widgets.amount.linkIncrease
+      );
+    }
+    setValue(value) {
+      const thisWidget = this;
+      const newValue = parseInt(value);
+      thisWidget.value = newValue;
+      thisWidget.input.value = thisWidget.value;
+      if (thisWidget.value !== newValue && !isNaN(newValue)) {
+        thisWidget.value = newValue;
+      }
+    }
+  }
+  class Cart {
+    constructor(element) {
+      const thisCart = this;
+
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element) {
+      const thisCart = this;
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element;
     }
   }
 
@@ -164,6 +257,13 @@
       for (let productData in thisApp.data.products) {
         new Product(productData, thisApp.data.products[productData]);
       }
+    },
+
+    initCart: function () {
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
     },
 
     initData: function () {
@@ -181,6 +281,7 @@
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
     },
   };
 

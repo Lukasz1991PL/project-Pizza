@@ -13,7 +13,8 @@
     "linebreak-style": ["off"],
     "quotes": ["warn", "single", { "allowTemplateLiterals": true }],
     "semi": ["warn", "always"],
-    "no-console": ["off"]
+    "no-console": ["off"],
+    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used" }]
   },
   "globals": {
     "Handlebars": false
