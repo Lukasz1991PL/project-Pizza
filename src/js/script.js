@@ -58,11 +58,12 @@
       document.querySelector(select.templateOf.menuProduct).innerHTML
     ),
   };
-
+  //////////////////////////////////////////Product////////////////////////////////////
   class Product {
     constructor(id, data) {
       const thisProduct = this;
 
+      console.log('new product', thisProduct);
       thisProduct.id = id;
       thisProduct.data = data;
 
@@ -71,7 +72,6 @@
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
       thisProduct.processOrder();
-      console.log('new product', thisProduct);
     }
     renderInMenu() {
       const thisProduct = this;
@@ -167,7 +167,7 @@
       for (let paramId in thisProduct.data.params) {
         // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
-        console.log('=>', param);
+        console.log('paramID', param);
 
         // for every option in this category
         for (let optionId in param.options) {
@@ -176,11 +176,9 @@
           console.log(optionId, option);
           console.log('option', option);
           // check if there is param with a name of paramId in formData and if it includes optionId
+
           const optionSelected =
             formData[paramId] && formData[paramId].includes(optionId);
-          const optionImage = thisProduct.imageWrapper.querySelector(
-            '.' + paramId + '-' + optionId
-          );
           if (optionSelected) {
             // check if the option is not default
             if (!option.default === true) {
@@ -198,8 +196,8 @@
       }
     }
   }
-
-  class AmuontWidget {
+  //////////////////////////////////////AmountWidget/////////////////////////////////////////////
+  /*class AmuontWidget {
     constructor(element) {
       const thisWidget = this;
       thisWidget.getElements(element);
@@ -228,7 +226,8 @@
         thisWidget.value = newValue;
       }
     }
-  }
+  }*/
+  //////////////////////////////////////////////Cart/////////////////////////////
   class Cart {
     constructor(element) {
       const thisCart = this;
@@ -248,7 +247,7 @@
       thisCart.dom.wrapper = element;
     }
   }
-
+  ////////////////////////////////APP//////////////////////////////////////////////
   const app = {
     initMenu: function () {
       const thisApp = this;
