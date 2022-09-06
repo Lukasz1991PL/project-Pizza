@@ -222,7 +222,7 @@
       console.log('thisProduct', thisProduct);
       thisProduct.priceSingle = price;
       /*multiply price by amount*/
-      // price *= thisProduct.amountWidget.value;
+      price *= thisProduct.amountWidget.value;
       // update calculated price in the HTML
       thisProduct.priceElem.innerHTML = price;
     }
@@ -249,8 +249,8 @@
       const productSummary = {};
 
       productSummary.id = thisProduct.id;
-      productSummary.name = thisProduct.name;
-      productSummary.amount = thisProduct.amount;
+      productSummary.name = thisProduct.data.name;
+      productSummary.amount = thisProduct.amountWidget.value;
       productSummary.priceSingle = thisProduct.priceSingle;
       productSummary.price = productSummary.priceSingle * productSummary.amount;
       productSummary.params = thisProduct.prepareCartProductParams();
